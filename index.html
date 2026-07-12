@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>栖木 — 秋招管理工具</title>
+<meta name="description" content="栖木：把投递、笔试、面试、offer 都记在一处的桌面小工具。数据本地存储。">
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🪵&lt;/text&gt;&lt;/svg&gt;">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2ecdf;
+    --bg-band: #ece4d3;
+    --card: #fdfbf5;
+    --ink: #33301f;
+    --ink-soft: #6f6752;
+    --ink-faint: #9a9077;
+    --line: rgba(83, 70, 40, .14);
+    --green: #4e8a1e;
+    --green-deep: #427517;
+    --orange: #e8963e;
+    --shadow: 0 1px 3px rgba(83, 70, 40, .05), 0 14px 40px rgba(83, 70, 40, .09);
+    --serif: Georgia, "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 26px; }
+
+  /* ---------- header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(242, 236, 223, .88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .logo { font-family: var(--serif); font-size: 21px; font-weight: 700; letter-spacing: 3px; }
+  .nav-links { display: flex; align-items: center; gap: 26px; font-size: 14px; color: var(--ink-soft); }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    background: var(--ink); color: var(--bg) !important;
+    padding: 8px 20px; border-radius: 999px; font-size: 13.5px;
+    transition: background .2s;
+  }
+  .nav-cta:hover { background: #000; }
+
+  /* ---------- 下载按钮组 ---------- */
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 12px 28px; border-radius: 999px; font-size: 15px;
+    transition: transform .15s, background .2s, border-color .2s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: var(--green); color: #fff; }
+  .btn-primary:hover { background: var(--green-deep); }
+  .btn-ghost { border: 1.5px solid var(--ink); color: var(--ink); }
+  .btn-ghost:hover { background: rgba(51, 48, 31, .06); }
+
+  .shot {
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    background: var(--card);
+  }
+
+  /* ---------- 首页截图 + 说明(左图右文,无框线指引) ---------- */
+  .annotated {
+    display: grid; grid-template-columns: 1.75fr 1fr;
+    gap: clamp(20px, 3vw, 38px); align-items: center;
+  }
+  .annotated .shot { width: 100%; }
+  .anno-figure { display: flex; flex-direction: column; gap: 12px; }
+  .anno-cap { font-size: clamp(15px, 1.9vw, 18px); color: var(--ink-soft); letter-spacing: .5px; padding-left: 2px; }
+  .anno-col { display: flex; flex-direction: column; gap: 14px; }
+  .bubble {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .bubble b {
+    display: flex; align-items: center; gap: 9px;
+    font-family: var(--serif); font-size: 17px; color: var(--ink); letter-spacing: 1px;
+  }
+  .bubble b::before {
+    content: ""; flex: none; width: 8px; height: 8px;
+    border-radius: 50%; background: var(--green);
+  }
+  .bubble span {
+    display: block; margin-top: 9px;
+    font-size: 14px; color: var(--ink-soft); line-height: 1.7;
+  }
+  .bubble-share { display: flex; align-items: center; gap: 14px; }
+  .bubble-share .bubble-txt { flex: 1; }
+  .bubble-share img {
+    width: 84px; flex: none; border-radius: 8px;
+    border: 1px solid var(--line);
+    box-shadow: 0 6px 16px rgba(83, 70, 40, .16);
+  }
+
+  /* ---------- pain:标题在上,三句大字逐句 ---------- */
+  .pain { padding: 76px 0 28px; }
+  #features { padding-top: 18px; }
+  .pain-title {
+    font-family: var(--serif); font-weight: 700;
+    font-size: clamp(24px, 3.4vw, 34px); letter-spacing: 1px;
+  }
+  .pain-lines { margin-top: clamp(22px, 3vw, 34px); display: grid; gap: clamp(18px, 2.6vw, 28px); }
+  .pain-line {
+    font-family: var(--serif); font-weight: 700;
+    font-size: clamp(19px, 2.7vw, 29px); line-height: 1.5;
+    letter-spacing: .5px; color: var(--ink-soft);
+  }
+  .pain-solution { margin-top: clamp(46px, 6.5vw, 78px); }
+  .pain .hero-actions { justify-content: flex-start; margin-top: 26px; }
+  /* 逐句出现 */
+  [data-stagger] .stagger-item {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  [data-stagger].in .stagger-item { opacity: 1; transform: none; }
+  [data-stagger].in .stagger-item:nth-child(1) { transition-delay: .05s; }
+  [data-stagger].in .stagger-item:nth-child(2) { transition-delay: .22s; }
+  [data-stagger].in .stagger-item:nth-child(3) { transition-delay: .39s; }
+  [data-stagger].in .stagger-item:nth-child(4) { transition-delay: .58s; }
+
+  /* ---------- 小分隔涂鸦 ---------- */
+  .divider { display: flex; justify-content: center; padding: 76px 0 0; }
+  .divider svg { width: 44px; height: 44px; opacity: .55; }
+
+  /* ---------- features ---------- */
+  .feature { padding: 64px 0 0; }
+  .feature-grid { display: grid; grid-template-columns: 300px 1fr; gap: 44px; align-items: center; }
+  .feature-grid.flip { grid-template-columns: 1fr 300px; }
+  .feature-grid.flip .feature-copy { order: 2; }
+  .feature-grid.flip .shot { order: 1; }
+  .eyebrow {
+    font-size: 12.5px; letter-spacing: 4px; color: var(--green);
+    font-weight: 600; margin-bottom: 10px;
+  }
+  .feature-copy h3 {
+    font-family: var(--serif);
+    font-size: 26px; font-weight: 700; letter-spacing: 1px; line-height: 1.45;
+  }
+  .feature-copy ul { list-style: none; margin-top: 16px; }
+  .feature-copy li {
+    position: relative; padding-left: 17px;
+    font-size: 14px; color: var(--ink-soft); line-height: 1.7;
+  }
+  .feature-copy li + li { margin-top: 9px; }
+  .feature-copy li::before {
+    content: ""; position: absolute; left: 0; top: .62em;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); opacity: .5;
+  }
+
+  /* ---------- AI:一行带过 ---------- */
+  .ai { padding: 96px 0 0; }
+  .ai h2 {
+    font-family: var(--serif); text-align: center;
+    font-size: clamp(26px, 3.6vw, 34px); font-weight: 700; letter-spacing: 1px;
+  }
+  .ai-line {
+    margin-top: 22px; display: flex; flex-wrap: wrap;
+    justify-content: center; gap: 12px 30px;
+    font-family: var(--serif); font-size: clamp(17px, 2.2vw, 22px);
+    color: var(--ink-soft); letter-spacing: 1px;
+  }
+  .ai-line span { position: relative; }
+  .ai-line span + span::before {
+    content: "·"; position: absolute; left: -17px; color: var(--ink-faint);
+  }
+
+  /* ---------- download ---------- */
+  .download { padding: 60px 0 84px; text-align: center; }
+  .download h2 {
+    font-family: var(--serif);
+    font-size: clamp(30px, 4.4vw, 44px); font-weight: 700; letter-spacing: 2px;
+  }
+  .download p { margin: 14px auto 0; max-width: 440px; color: var(--ink-soft); font-size: 15px; }
+  .download .hero-actions { margin-top: 30px; justify-content: center; }
+
+  /* ---------- footer ---------- */
+  footer {
+    background: #2c271a; color: #b8ae95;
+    padding: 30px 0; text-align: center; font-size: 13.5px; letter-spacing: 1px;
+  }
+  footer .logo-f { font-family: var(--serif); color: #f2ecdf; font-size: 16px; letter-spacing: 3px; margin-right: 14px; }
+  footer a { color: #d8cfb6; border-bottom: 1px dashed #7a7157; }
+  footer a:hover { color: #fff; }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 860px) {
+    .annotated { grid-template-columns: 1fr; }
+    .feature-grid, .feature-grid.flip { grid-template-columns: 1fr; gap: 20px; }
+    .feature-grid.flip .feature-copy { order: 1; }
+    .feature-grid.flip .shot { order: 2; }
+    .ai-row { grid-template-columns: 1fr; gap: 6px; padding: 20px 2px; }
+    .ai-row .tag { justify-self: start; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#">栖木</a>
+    <nav class="nav-links">
+      <a href="#features">功能</a>
+      <a href="https://gitee.com/zhy336013945/qiumu-job" target="_blank" rel="noopener">Gitee</a>
+      <a class="nav-cta" href="#download">下载</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= 开场:痛点 → 转折 → 下载 ================= -->
+  <section class="pain">
+    <div class="wrap">
+      <h2 class="pain-title reveal">你是否也遇到过</h2>
+      <div class="pain-lines" data-stagger>
+        <p class="pain-line stagger-item">投了几十个岗位，记不清每家走到哪一步了。</p>
+        <p class="pain-line stagger-item">每次网申，都在重复填一样的信息。</p>
+        <p class="pain-line stagger-item">面试前想复盘，JD 和笔记散落在各地。</p>
+      </div>
+      <h2 class="pain-title pain-solution reveal">用一个软件管理你的秋招</h2>
+      <div class="hero-actions reveal">
+        <a class="btn btn-primary" href="#download">下载 Windows 版</a>
+        <a class="btn btn-ghost" href="https://gitee.com/zhy336013945/qiumu-job" target="_blank" rel="noopener">Gitee</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 首页截图 + 说明 ================= -->
+  <section class="feature" id="features">
+    <div class="wrap">
+      <div class="annotated reveal">
+        <div class="anno-figure">
+          <p class="anno-cap">首页 · 数据统计看板和代办清单</p>
+          <div class="shot"><img src="assets/home.png" alt="栖木首页：投递统计、整体占比、转化漏斗与代办" loading="lazy"></div>
+        </div>
+        <div class="anno-col" data-stagger>
+          <div class="bubble bubble-share stagger-item">
+            <div class="bubble-txt">
+              <b>生成战绩</b>
+              <span>一键生成战绩图分享。</span>
+            </div>
+            <img src="assets/sharecard.png" alt="一键生成的秋招战绩卡">
+          </div>
+          <div class="bubble stagger-item">
+            <b>转化漏斗</b>
+            <span>从投递到 offer，一眼发现转化卡在哪一个环节。</span>
+          </div>
+          <div class="bubble stagger-item">
+            <b>代办清单</b>
+            <span>面试、笔试截止日期，记下来提醒自己。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 我的资料 ================= -->
+  <section class="feature">
+    <div class="wrap feature-grid reveal">
+      <div class="feature-copy">
+        <div class="eyebrow">我的资料</div>
+        <h3>常用的资料，聚在一处</h3>
+        <ul>
+          <li>个人信息、项目、论文分块存放，填网申时点一下就能复制。</li>
+          <li>简历传一次，每次投递都能关联上对应的版本。</li>
+          <li>所有数据只存在本地，不经过任何服务器。</li>
+        </ul>
+      </div>
+      <div class="shot"><img src="assets/profile.png" alt="我的资料：个人信息、项目、论文与简历库" loading="lazy"></div>
+    </div>
+  </section>
+
+  <!-- ================= 流程管理 ================= -->
+  <section class="feature">
+    <div class="wrap feature-grid flip reveal">
+      <div class="feature-copy">
+        <div class="eyebrow">流程管理</div>
+        <h3>每一次投递，都有迹可循</h3>
+        <ul>
+          <li>公司、岗位、进度、当时投的哪版简历，都记在一张卡片里。</li>
+          <li>按进度、公司性质、行业分组查看，一目了然。</li>
+          <li>面试前随手翻到当时的 JD，不用再去翻记录。</li>
+        </ul>
+      </div>
+      <div class="shot"><img src="assets/process.png" alt="流程管理：按进度分组的投递列表" loading="lazy"></div>
+    </div>
+  </section>
+
+  <!-- ================= 笔记 ================= -->
+  <section class="feature">
+    <div class="wrap feature-grid reveal">
+      <div class="feature-copy">
+        <div class="eyebrow">笔记</div>
+        <h3>趁热记下来，复盘翻得到</h3>
+        <ul>
+          <li>笔试面试结束，把题目和感受记一笔。</li>
+          <li>加个标签、标个重要，之后检索很方便。</li>
+          <li>有模板可用，不用对着空白页发呆。</li>
+        </ul>
+      </div>
+      <div class="shot"><img src="assets/notes.png" alt="笔记：可标记、可检索的面试笔记" loading="lazy"></div>
+    </div>
+  </section>
+
+  <!-- ================= AI ================= -->
+  <section class="ai">
+    <div class="wrap">
+      <h2 class="reveal">AI 功能，敬请期待</h2>
+      <div class="ai-line reveal">
+        <span>AI 填写岗位信息</span>
+        <span>AI 简历优化</span>
+        <span>AI 面试模拟题</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= download ================= -->
+  <section class="download" id="download">
+    <div class="wrap">
+      <div class="hero-actions reveal">
+        <a class="btn btn-primary" href="https://gitee.com/zhy336013945/qiumu-job/releases" target="_blank" rel="noopener">下载最新版</a>
+        <a class="btn btn-ghost" href="https://gitee.com/zhy336013945/qiumu-job" target="_blank" rel="noopener">源码与更新日志</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="logo-f">栖木</span>秋招管理工具 ·
+    <a href="https://gitee.com/zhy336013945/qiumu-job" target="_blank" rel="noopener">Gitee</a>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal, [data-stagger]').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
