@@ -20,8 +20,8 @@
 
 ## 部署在 Gitee Pages
 
-仓库地址：https://gitee.com/zhy336013945/qiumu-job
-上线后网址：https://zhy336013945.gitee.io/qiumu-job
+仓库地址：https://gitee.com/zhuayu_zhu/qiumu-job
+上线后网址：https://zhuayu_zhu.gitee.io/qiumu-job
 
 ### 首次部署
 
@@ -30,7 +30,7 @@
 git init
 git add -A
 git commit -m "栖木官网"
-git remote add origin https://gitee.com/zhy336013945/qiumu-job.git
+git remote add origin https://gitee.com/zhuayu_zhu/qiumu-job.git
 git push -u origin master
 ```
 
@@ -55,5 +55,5 @@ git push
 ## 下载按钮指向哪里
 
 「下载 Windows 版 / 下载最新版」都指向仓库的 Releases 页
-（https://gitee.com/zhy336013945/qiumu-job/releases）。
+（https://gitee.com/zhuayu_zhu/qiumu-job/releases）。
 把 electron-builder 打出的安装包作为 Release 附件传上去，链接即生效。
