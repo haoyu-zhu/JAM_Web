@@ -30,11 +30,11 @@ git push
 
 ## 下载按钮指向哪里
 
-两个「下载 Windows 版」按钮都直连 JAM 源码仓库的**最新发行版附件**：
+两个「下载 Windows 版」按钮都直连 JAM 源码仓库的**最新发行版附件**，点击即开始下载：
 
 ```
 https://github.com/haoyu-zhu/JAM/releases/latest/download/JobTracker-Setup-0.1.0.exe
 ```
 
-`releases/latest/download/` 会自动指向最新发行版，点击即开始下载。
-发新版本时，若安装包文件名变了（版本号在文件名里），记得同步改 `index.html` 里这两个按钮的链接。
+`releases/latest/download/` 会自动指向最新发行版（当前为 `JAM_V1` / v0.1.0）。
+发新版本时：在 JAM 仓库发一个新 Release 并上传新的 `.exe`；若文件名里的版本号变了，记得同步改 `index.html` 里这两个按钮的链接文件名。
