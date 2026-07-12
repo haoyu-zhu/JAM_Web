@@ -1,6 +1,8 @@
-# 栖木官网
+# 栖木官网（JAM_Web）
 
 栖木（秋招管理工具）的宣传网站。纯静态，单个 `index.html` + `assets/` 截图，无任何构建步骤和外部依赖。
+
+在线地址：https://haoyu-zhu.github.io/JAM_Web
 
 ## 目录结构
 
@@ -18,42 +20,30 @@
 
 截图是用示例数据在软件里现截的（2560×1600），替换时保持同名即可。
 
-## 部署在 Gitee Pages
+## 部署（GitHub Pages）
 
-仓库地址：https://gitee.com/zhy336013945/qiumu-job
-上线后网址：https://zhy336013945.gitee.io/qiumu-job
+- 仓库：https://github.com/haoyu-zhu/JAM_Web
+- 已开启 Pages：仓库 **Settings → Pages → Deploy from a branch → `main` / `(root)`**。
+- 推送到 `main` 后，GitHub 会**自动重新构建部署**，无需手动操作。
 
-### 首次部署
-
-```bash
-# 在本文件夹执行
-git init
-git add -A
-git commit -m "栖木官网"
-git remote add origin https://gitee.com/zhy336013945/qiumu-job.git
-git push -u origin master
-```
-
-推送时会要求输入 Gitee 用户名 + 密码（或私人令牌）。
-
-然后在 Gitee 仓库页面开启 Pages：
-**服务 → Gitee Pages → 选择 master 分支 → 部署**。
-（Gitee 要求账号完成实名认证后才能使用 Pages。）
-
-### 之后更新
-
-改完文件后：
+### 更新网站
 
 ```bash
 git add -A
 git commit -m "更新文案"
-git push
+git push            # 推到 GitHub(origin)，Pages 自动重建
 ```
 
-再回 Gitee Pages 页面点一次 **更新** 即可（Gitee Pages 不会自动重新部署）。
+### 同步到 Gitee（可选镜像）
+
+本仓库另设了 `gitee` 远程作为国内镜像：
+
+```bash
+git push gitee main
+```
 
 ## 下载按钮指向哪里
 
-「下载 Windows 版 / 下载最新版」都指向仓库的 Releases 页
-（https://gitee.com/zhy336013945/qiumu-job/releases）。
+站内「下载 Windows 版 / 下载最新版」指向 Gitee 仓库的 Releases 页
+（https://gitee.com/zhy336013945/qiumu-job/releases），国内下载更快。
 把 electron-builder 打出的安装包作为 Release 附件传上去，链接即生效。
