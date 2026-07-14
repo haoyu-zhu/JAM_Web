@@ -201,6 +201,21 @@
   footer a { color: #d8cfb6; border-bottom: 1px dashed #7a7157; }
   footer a:hover { color: #fff; }
 
+  /* ---------- 右下角访问统计 ---------- */
+  .visit-badge {
+    position: fixed; right: 14px; bottom: 14px; z-index: 40;
+    display: none;               /* 数字加载出来后由 JS 显示 */
+    background: rgba(253, 251, 245, .92);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border: 1px solid var(--line); border-radius: 999px;
+    padding: 6px 14px; font-size: 12.5px; color: var(--ink-soft);
+    box-shadow: var(--shadow); letter-spacing: .5px;
+  }
+  .visit-badge b { color: var(--green-deep); font-weight: 700; }
+  @media (max-width: 600px) {
+    .visit-badge { font-size: 11.5px; padding: 5px 11px; right: 10px; bottom: 10px; }
+  }
+
   /* reveal */
   .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
   .reveal.in { opacity: 1; transform: none; }
@@ -356,7 +371,24 @@
   </div>
 </footer>
 
+<!-- 右下角访问统计（不蒜子） -->
+<div class="visit-badge" id="visitBadge" aria-hidden="true">
+  访客 <b id="busuanzi_value_site_uv">–</b> · 浏览 <b id="busuanzi_value_site_pv">–</b>
+</div>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
 <script>
+  // 不蒜子加载出数字后再显示徽标；~10 秒还没出来就保持隐藏
+  (function () {
+    var badge = document.getElementById('visitBadge');
+    var uv = document.getElementById('busuanzi_value_site_uv');
+    var n = 0, t = setInterval(function () {
+      if (uv && uv.textContent.trim() && uv.textContent.trim() !== '–') {
+        badge.style.display = 'block'; clearInterval(t);
+      } else if (++n > 40) { clearInterval(t); }
+    }, 250);
+  })();
+
   const io = new IntersectionObserver((entries) => {
     for (const e of entries) {
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
