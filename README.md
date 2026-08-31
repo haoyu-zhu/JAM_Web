@@ -33,8 +33,8 @@ git push
 两个「下载 Windows 版」按钮都直连 JAM 源码仓库的**最新发行版附件**，点击即开始下载：
 
 ```
-https://github.com/haoyu-zhu/JAM/releases/latest/download/JobTracker-Setup-0.1.0.exe
+https://github.com/haoyu-zhu/JAM/releases/latest/download/JobTracker-Setup.exe
 ```
 
-`releases/latest/download/` 会自动指向最新发行版（当前为 `JAM_V1` / v0.1.0）。
-发新版本时：在 JAM 仓库发一个新 Release 并上传新的 `.exe`；若文件名里的版本号变了，记得同步改 `index.html` 里这两个按钮的链接文件名。
+`releases/latest/download/` 会自动指向最新发行版，安装包文件名固定为 `JobTracker-Setup.exe`（不带版本号）。
+**发新版本时：Release 里的安装包务必仍命名为 `JobTracker-Setup.exe`**，这样这个链接永远指向最新版，`index.html` 无需再改。
