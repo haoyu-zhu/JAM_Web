@@ -191,6 +191,17 @@
   }
   .download p { margin: 14px auto 0; max-width: 440px; color: var(--ink-soft); font-size: 15px; }
   .download .hero-actions { margin-top: 30px; justify-content: center; }
+  .download-note {
+    margin: 18px auto 0; max-width: 560px;
+    font-size: 13px; color: var(--ink-faint); line-height: 1.7;
+  }
+  .download-note a { border-bottom: 1px dashed var(--ink-faint); }
+  .download-note a:hover { color: var(--ink-soft); }
+  code {
+    font-family: "SF Mono", "Consolas", "Menlo", monospace;
+    font-size: .92em; background: rgba(83, 70, 40, .08);
+    padding: 1px 6px; border-radius: 5px;
+  }
 
   /* ---------- footer ---------- */
   footer {
@@ -258,6 +269,7 @@
       <h2 class="pain-title pain-solution reveal">用一个软件管理你的秋招</h2>
       <div class="hero-actions reveal">
         <a class="btn btn-primary" href="https://github.com/haoyu-zhu/JAM/releases/latest/download/JobTracker-Setup.exe">下载 Windows 版</a>
+        <a class="btn btn-ghost" href="https://github.com/haoyu-zhu/JAM/releases/latest/download/JobTracker-Mac-Source.zip">Mac 版</a>
         <a class="btn btn-ghost" href="https://github.com/haoyu-zhu/JAM" target="_blank" rel="noopener">GitHub</a>
       </div>
     </div>
@@ -373,8 +385,12 @@
     <div class="wrap">
       <div class="hero-actions reveal">
         <a class="btn btn-primary" href="https://github.com/haoyu-zhu/JAM/releases/latest/download/JobTracker-Setup.exe">下载 Windows 版</a>
+        <a class="btn btn-ghost" href="https://github.com/haoyu-zhu/JAM/releases/latest/download/JobTracker-Mac-Source.zip">下载 Mac 版</a>
         <a class="btn btn-ghost" href="https://github.com/haoyu-zhu/JAM" target="_blank" rel="noopener">源码与更新日志</a>
       </div>
+      <p class="download-note reveal">
+        Windows 直接双击安装即用。Mac 版为源码版：先装 <a href="https://nodejs.org" target="_blank" rel="noopener">Node.js</a>，解压后双击 <code>启动.command</code>，详见压缩包内《Mac使用说明.md》。
+      </p>
     </div>
   </section>
 
